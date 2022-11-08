@@ -158,10 +158,21 @@ FOUNDATION_PRINTFCALL(5, 0)
 				buffer[endl++] = '\n';
 			buffer[endl] = 0;
 
-#if FOUNDATION_PLATFORM_WINDOWS
-			if (log_stdout_enabled)
-				OutputDebugStringA(buffer);
-#endif
+			/// # BEGIN PATCH 2022-09-20
+			#if FOUNDATION_PLATFORM_WINDOWS
+			{
+				size_t utf8_glyphs = string_glyphs(buffer, (unsigned int)endl);
+				if (utf8_glyphs == (size_t)endl)
+					OutputDebugStringA(buffer);
+				else
+				{
+					wchar_t* wbuffer = wstring_allocate_from_string(buffer, (unsigned int)endl);
+					OutputDebugStringW(wbuffer);
+					wstring_deallocate(wbuffer);
+				}
+			}
+			#endif
+			/// # END PATCH 2022-09-20
 
 #if FOUNDATION_PLATFORM_ANDROID
 			FOUNDATION_UNUSED(std);
@@ -361,6 +372,13 @@ void
 log_enable_prefix(bool enable) {
 	log_prefix = enable;
 }
+
+// =======================================
+bool
+log_is_prefix_enabled() {
+	return log_prefix;
+}
+// =======================================
 
 void
 log_enable_auto_newline(bool enable) {

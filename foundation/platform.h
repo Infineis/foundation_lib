@@ -92,6 +92,14 @@ thread local storage to ensure maximum portability across supported platforms */
 #define FOUNDATION_COMPILER_MSVC 0
 #define FOUNDATION_COMPILER_INTEL 0
 
+// =======================================
+#if BUILD_DEBUG
+#define FOUNDATION_STATIC
+#else
+#define FOUNDATION_STATIC static
+#endif
+// =======================================
+
 // First, platforms and architectures
 
 // Android
@@ -810,7 +818,7 @@ thread local storage to ensure maximum portability across supported platforms */
 #define FOUNDATION_ATTRIBUTE3(x, y, z)
 #define FOUNDATION_ATTRIBUTE4(x, y, z, w)
 
-#define FOUNDATION_RESTRICT restrict
+#define FOUNDATION_RESTRICT __restrict 
 #define FOUNDATION_THREADLOCAL __declspec(thread)
 
 #define FOUNDATION_DEPRECATED __declspec(deprecated)
@@ -1029,8 +1037,15 @@ typedef volatile _Atomic(void*) atomicptr_t;
 
 // String argument helpers
 #define STRING_CONST(s) (s), (sizeof((s)) - 1)
+// =======================================
+#define STRING_CONST_CAPACITY(s) (s), (sizeof((s)))
+#define WSTRING_CONST(s) (s), (sizeof((s))/sizeof((s[0])) - 1)
+// =======================================
 #define STRING_ARGS(s) (s).str, (s).length
 #define STRING_ARGS_CAPACITY(s) (s).str, (s).length, (s).length + 1
+// =======================================
+#define STRING_CAPACITY(s) (s).str, (s).length + 1
+// =======================================
 #define STRING_FORMAT(s) (int)(s).length, (s).str
 
 // Misc

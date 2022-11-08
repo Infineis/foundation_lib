@@ -154,6 +154,13 @@ log_stdout(void);
 FOUNDATION_API void
 log_enable_prefix(bool enable);
 
+// =======================================
+/*! Control output of prefix information
+\param enable Flag to enable/disable prefix output */
+FOUNDATION_API bool
+log_is_prefix_enabled();
+// =======================================
+
 /*! Control automatic newline
 \param enable Flag to enable/disable automatic newline */
 FOUNDATION_API void

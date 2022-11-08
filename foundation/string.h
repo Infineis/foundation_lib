@@ -16,7 +16,7 @@
 \brief String utility functions
 
 String handling and utility functions in UTF-8, conversion to/from UTF-16. Conversion
-to and from pritimive integral data types. Unless otherwise noted in the function descripion it
+to and from primitive integral data types. Unless otherwise noted in the function description it
 is only safe to pass null pointers to any arguments if the corresponding length and/or capacity
 argument is also zero.
 
@@ -823,7 +823,7 @@ string_from_float64(char* str, size_t capacity, float64_t val, unsigned int prec
 
 /*! Get a formatted string of the given timestamp. String buffer should be at least
 25 bytes (24 characters + terminating zero). A capacity of less than 25 characters
-will result in an empty string result. The string will be formetted like
+will result in an empty string result. The string will be formatted like
 "Thu Jan 01 00:00:00 1970" and the timestamp is treated as either local time or as
 UTC (no local timezone is taken into consideration). String will be zero terminated.
 \param str String buffer

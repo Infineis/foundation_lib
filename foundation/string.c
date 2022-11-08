@@ -1559,16 +1559,22 @@ string_from_float64(char* buffer, size_t capacity, float64_t val, unsigned int p
 	if (width >= capacity)
 		width = (unsigned int)capacity - 1;
 
-	end = string_find_last_not_of(buffer, ulen, STRING_CONST("0"), STRING_NPOS);
-	if (end != STRING_NPOS) {
-		if (buffer[end] == '.')
-			--end;
-		if (end != (ulen - 1)) {
-			++end;
-			ulen = (unsigned int)end;
-			buffer[end] = 0;
+	/// # BEGIN PATCH 2022-09-21
+	size_t sep_pos = string_rfind(buffer, ulen, '.', STRING_NPOS);
+	if (sep_pos != STRING_NPOS)
+	{
+		end = string_find_last_not_of(buffer, ulen, STRING_CONST("0"), STRING_NPOS);
+		if (end != STRING_NPOS && end > sep_pos) {
+			if (buffer[end] == '.')
+				--end;
+			if (end != (ulen - 1)) {
+				++end;
+				ulen = (unsigned int)end;
+				buffer[end] = 0;
+			}
 		}
 	}
+	/// # END PATCH 2022-09-21
 
 	// Some cleanups
 	if (string_equal(buffer, ulen, "-0", 2) || string_equal(buffer, ulen, "-", 1)) {

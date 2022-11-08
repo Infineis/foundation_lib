@@ -121,8 +121,10 @@ typedef enum {
 	WARNING_SCRIPT,
 	/*! Resource was missing or corrupt */
 	WARNING_RESOURCE,
-	/*! Marker, last reserved inernal warning identifier */
-	WARNING_LAST_BUILTIN = 0x0fff
+	/*! Marker, last reserved internal warning identifier */
+	WARNING_LAST_BUILTIN = 0x0fff,
+	/*! Standard warning */
+	WARNING_STANDARD
 } warning_t;
 
 /*! Platform identifiers. For compile-time platform selection, use the
@@ -345,7 +347,7 @@ typedef enum {
 	JSON_PRIMITIVE
 } json_type_t;
 
-/*! Memory hint, memory allocationis persistent (retained when function returns) */
+/*! Memory hint, memory allocations persistent (retained when function returns) */
 #define MEMORY_PERSISTENT 0
 /*! Memory hint, memory is temporary (extremely short lived and generally freed
 before function returns or scope ends) */
@@ -360,6 +362,7 @@ before function returns or scope ends) */
 /*! Event flag, event is delayed and will be delivered at a later timestamp */
 #define EVENTFLAG_DELAY 1U
 
+#define APPLICATION_STANDARD (0)
 /*! Application flag, application is a command line utility and should not have
 a normal windowing system interaction loop */
 #define APPLICATION_UTILITY (1U << 0)
@@ -395,6 +398,8 @@ an error occurs during spawning */
 #define PROCESS_STDSTREAMS (1U << 2)
 /*! Process flag, use ShellExecute instead of CreateProcess (Windows platform only) */
 #define PROCESS_WINDOWS_USE_SHELLEXECUTE (1U << 3)
+/*! Process flag, hide the exe window when spawed */
+#define PROCESS_HIDE_WINDOW                (1U<<3)
 /*! Process flag, use LSOpenApplication instead of fork/execve (macOS platform only) */
 #define PROCESS_MACOS_USE_OPENAPPLICATION (1U << 4)
 
