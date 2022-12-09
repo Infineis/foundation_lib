@@ -75,3 +75,11 @@ system_show_alert(const char* title, size_t title_length, const char* message, s
 #endif
 	}
 }
+
+bool system_is_dark_theme()
+{
+    @autoreleasepool {
+        NSString *osxMode = [[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"];
+        return [osxMode isEqualToString:@"Dark"];
+    }
+}

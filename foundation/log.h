@@ -22,7 +22,7 @@ A context is identified by a hash value, normally a static string hash.
 
 A log level is either debug, info, warning, error or panic (in increasing order of significance).
 
-Using different function calls for different log levels allows build-time contol over code
+Using different function calls for different log levels allows build-time control over code
 generation. Disabling log debug message build flag would make all log_debug/log_debugf calls
 to be statically removed at compile time instead of filtered at runtime, reducing binary
 size and call overhead. By enabling the build flag and instead using a log context level
@@ -174,7 +174,7 @@ has no explicit supression level the default (0) context supression level will b
 FOUNDATION_API void
 log_set_suppress(hash_t context, error_level_t level);
 
-/*! Get current log supression level for the given context
+/*! Get current log suppression level for the given context
 \param context Log context
 \return Severity level being discarded for the given context */
 FOUNDATION_API error_level_t

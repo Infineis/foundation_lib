@@ -121,10 +121,14 @@ typedef enum {
 	WARNING_SCRIPT,
 	/*! Resource was missing or corrupt */
 	WARNING_RESOURCE,
+    /*! Standard warning */
+    WARNING_STANDARD,
+	/*! Used for network and cloud warning */
+	WARNING_CLOUD,
+    /*! Used for UI warnings */
+    WARNING_UI,
 	/*! Marker, last reserved internal warning identifier */
 	WARNING_LAST_BUILTIN = 0x0fff,
-	/*! Standard warning */
-	WARNING_STANDARD
 } warning_t;
 
 /*! Platform identifiers. For compile-time platform selection, use the
@@ -362,7 +366,6 @@ before function returns or scope ends) */
 /*! Event flag, event is delayed and will be delivered at a later timestamp */
 #define EVENTFLAG_DELAY 1U
 
-#define APPLICATION_STANDARD (0)
 /*! Application flag, application is a command line utility and should not have
 a normal windowing system interaction loop */
 #define APPLICATION_UTILITY (1U << 0)
@@ -370,6 +373,8 @@ a normal windowing system interaction loop */
 #define APPLICATION_DAEMON (1U << 1)
 /*! Application flag, application is unattended */
 #define APPLICATION_UNATTENDED (1U << 2)
+/*! Application flag, classic graphical user application */
+#define APPLICATION_GUI (1U << 3)
 
 /*! Stream mode/flag, stream is readable */
 #define STREAM_IN 1U

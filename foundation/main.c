@@ -234,7 +234,7 @@ main(int argc, char** argv)
 
 #if FOUNDATION_PLATFORM_APPLE
 #if FOUNDATION_PLATFORM_MACOS
-	if (!(environment_application()->flags & (APPLICATION_UTILITY | APPLICATION_DAEMON))) {
+	if (!(environment_application()->flags & (APPLICATION_UTILITY | APPLICATION_DAEMON | APPLICATION_GUI))) {
 		delegate_start_main_ns_thread();
 
 		thread_exit();

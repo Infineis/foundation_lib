@@ -423,7 +423,7 @@ environment_application_directory(void) {
 		char* pathbuf = memory_allocate(0, BUILD_MAX_PATHLEN, 0, MEMORY_TEMPORARY);
 		string_t pathstr = environment_ns_home_directory(pathbuf, BUILD_MAX_PATHLEN);
 #if FOUNDATION_PLATFORM_MACOS
-		if (!(environment_application()->flags & APPLICATION_UTILITY)) {
+		if (!(environment_application()->flags & (APPLICATION_UTILITY | APPLICATION_GUI))) {
 			char bundle_identifier[256];
 			string_t bundle = environment_bundle_identifier(bundle_identifier, sizeof(bundle_identifier));
 			pathstr = path_append_varg(STRING_ARGS(pathstr), BUILD_MAX_PATHLEN,

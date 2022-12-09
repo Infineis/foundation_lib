@@ -1037,17 +1037,17 @@ typedef volatile _Atomic(void*) atomicptr_t;
 
 // String argument helpers
 #define STRING_CONST(s) (s), (sizeof((s)) - 1)
+#define STRING_ARGS(s) (s).str, (s).length
+#define STRING_ARGS_CAPACITY(s) (s).str, (s).length, (s).length + 1
+#define STRING_CAPACITY(s) (s).str, (s).length + 1
+#define STRING_FORMAT(s) (int)(s).length, (s).str
+
 // =======================================
+#define STRING_RANGE(s) (s).str, (s).str + (s).length
 #define STRING_CONST_CAPACITY(s) (s), (sizeof((s)))
 #define WSTRING_CONST(s) (s), (sizeof((s))/sizeof((s[0])) - 1)
 // =======================================
-#define STRING_ARGS(s) (s).str, (s).length
-#define STRING_ARGS_CAPACITY(s) (s).str, (s).length, (s).length + 1
-// =======================================
-#define STRING_CAPACITY(s) (s).str, (s).length + 1
-// =======================================
-#define STRING_FORMAT(s) (int)(s).length, (s).str
-
+// 
 // Misc
 #if defined(__COVERITY__)
 #define FOUNDATION_UNUSED_SINGLE(x) ((void)(x))

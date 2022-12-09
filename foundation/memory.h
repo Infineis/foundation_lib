@@ -29,9 +29,9 @@ statically removed and context 0 is used everywhere. Memory contexts are stored 
 #include <foundation/platform.h>
 #include <foundation/types.h>
 
-/*! Allocate memory. Memory will be aligned to the given alingment unless
+/*! Allocate memory. Memory will be aligned to the given alignment unless
 set to 0, which will cause alignment to be ignored. Memory hints can be given to allow the
-memory system to make better choises of how to allocate the memory.
+memory system to make better choices of how to allocate the memory.
 If context is 0, the currently set memory context scope is used (see #memory_context,
 #memory_context_push and #memory_context_pop)
 \param context Memory context

@@ -157,3 +157,7 @@ system_post_event(foundation_event_id event);
 on thread exit for foundation threads. */
 FOUNDATION_API void
 system_thread_finalize(void);
+
+/*! Checks if the systeme is a running a dark theme */
+FOUNDATION_API bool
+system_is_dark_theme();
