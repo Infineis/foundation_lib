@@ -230,7 +230,7 @@ process_spawn(process_t* proc) {
 		sei.lpFile = wpath;
 		sei.lpParameters = wcmdline;
 		sei.lpDirectory = wwd;
-		sei.nShow = SW_SHOWNORMAL;
+		sei.nShow = (proc->flags & PROCESS_HIDE_WINDOW) ? SW_HIDE : SW_SHOWNORMAL;
 
 		if (!(proc->flags & PROCESS_CONSOLE))
 			sei.fMask |= SEE_MASK_NO_CONSOLE;
@@ -259,11 +259,14 @@ process_spawn(process_t* proc) {
 	} else {
 		STARTUPINFOW si;
 		PROCESS_INFORMATION pi;
-		BOOL inherit_handles = FALSE;
+		BOOL inherit_handles = (proc->flags & PROCESS_CONSOLE);
 
 		memset(&si, 0, sizeof(si));
 		memset(&pi, 0, sizeof(pi));
 		si.cb = sizeof(si);
+
+		if (proc->flags & PROCESS_HIDE_WINDOW)
+			si.wShowWindow = SW_HIDE;
 
 		if (proc->flags & PROCESS_STDSTREAMS) {
 			proc->pipeout = pipe_allocate();
@@ -287,7 +290,7 @@ process_spawn(process_t* proc) {
 		//           STRING_FORMAT(proc->path), STRING_FORMAT(cmdline));
 
 		if (!CreateProcessW(0, wcmdline, 0, 0, inherit_handles,
-		                    (proc->flags & PROCESS_CONSOLE) ? CREATE_NEW_CONSOLE : 0, 0, wwd, &si, &pi)) {
+		                    (proc->flags & PROCESS_CONSOLE) ? CREATE_NEW_CONSOLE | HIGH_PRIORITY_CLASS : 0, 0, wwd, &si, &pi)) {
 			string_const_t errstr = system_error_message(0);
 			log_warnf(0, WARNING_SYSTEM_CALL_FAIL,
 			          STRING_CONST("Unable to spawn process (CreateProcess) for executable '%.*s': %.*s"),

@@ -50,7 +50,7 @@ static char* log_warning_name[LOG_WARNING_NAMES] = {"performance", "deprecated",
                                                     "unsupported", "suspicious", "system call fail", "deadlock",
                                                     "script",      "resource", "network", "standard", "cloud", "UI"};
 
-#define LOG_ERROR_NAMES 17
+#define LOG_ERROR_NAMES 18
 static char* log_error_name[LOG_ERROR_NAMES] = {"none",
                                                 "invalid value",
                                                 "unsupported",
