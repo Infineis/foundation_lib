@@ -45,10 +45,10 @@ static hashtable64_t* log_suppress_table;
 static error_level_t log_suppress_default;
 static bool log_auto_newline = true;
 
-#define LOG_WARNING_NAMES 10+3
+#define LOG_WARNING_NAMES 11+3
 static char* log_warning_name[LOG_WARNING_NAMES] = {"performance", "deprecated", "invalid value",    "memory",
                                                     "unsupported", "suspicious", "system call fail", "deadlock",
-                                                    "script",      "resource", "standard", "cloud", "UI"};
+                                                    "script",      "resource", "network", "standard", "cloud", "UI"};
 
 #define LOG_ERROR_NAMES 17
 static char* log_error_name[LOG_ERROR_NAMES] = {"none",
@@ -67,7 +67,8 @@ static char* log_error_name[LOG_ERROR_NAMES] = {"none",
                                                 "deprecated",
                                                 "assert",
                                                 "script",
-                                                "corrupt data"};
+                                                "corrupt data",
+                                                "network"};
 
 struct log_timestamp_t {
 	int hours;
@@ -419,6 +420,17 @@ log_suppress_clear(hash_t context) {
 
 #endif
 
+#if FOUNDATION_PLATFORM_WINDOWS && BUILD_ENABLE_LOG
+
+static void
+enable_vt100(HANDLE stream) {
+	DWORD current_mode = 0;
+	GetConsoleMode(stream, &current_mode);
+	SetConsoleMode(stream, current_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN);
+}
+
+#endif
+
 int
 internal_log_initialize(void) {
 #if BUILD_ENABLE_LOG
@@ -434,6 +446,12 @@ internal_log_initialize(void) {
 	else
 		log_hwthread_width = 8;
 	log_tid_width = 4;
+
+#if FOUNDATION_PLATFORM_WINDOWS
+	// In Windows 10 and later we can use VT100 controls if we enable it
+	enable_vt100(GetStdHandle(STD_OUTPUT_HANDLE));
+	enable_vt100(GetStdHandle(STD_ERROR_HANDLE));
+#endif
 #endif
 	return 0;
 }
