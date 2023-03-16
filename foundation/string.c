@@ -92,7 +92,9 @@ string_allocate_format(const char* format, size_t length, ...) {
 		else
 			capacity *= 2;
 
+		memory_context_push(HASH_STRING);
 		buffer = memory_reallocate(buffer, capacity, 0, lastcapacity, MEMORY_NO_PRESERVE);
+		memory_context_pop();
 	}
 
 	return (string_t){buffer, (unsigned int)n};
@@ -149,7 +151,9 @@ string_allocate_vformat(const char* format, size_t length, va_list list) {
 		else
 			capacity *= 2;
 
+		memory_context_push(HASH_STRING);
 		buffer = memory_reallocate(buffer, capacity, 0, lastcapacity, MEMORY_NO_PRESERVE);
+		memory_context_pop();
 	}
 
 	return (string_t){buffer, (unsigned int)n};
@@ -191,8 +195,10 @@ string_t
 string_resize(char* str, size_t length, size_t capacity, size_t new_length, char c) {
 	FOUNDATION_ASSERT(length <= capacity);
 	if (new_length >= capacity) {
+        memory_context_push(HASH_STRING);
 		str = capacity ? memory_reallocate(str, new_length + 1, 0, capacity, 0) :
                          memory_allocate(HASH_STRING, new_length + 1, 0, MEMORY_PERSISTENT);
+		memory_context_pop();
 	}
 	if (length < new_length)
 		memset(str + length, c, new_length - length);
@@ -752,6 +758,12 @@ string_ends_with(const char* str, size_t length, const char* suffix, size_t suff
 	if (!suffix_length)
 		return true;
 	return (memcmp(str + (length - suffix_length), suffix, suffix_length) == 0);
+}
+
+int
+string_compare(const char* lhs, size_t lhs_length, const char* rhs, size_t rhs_length)
+{
+    return strncasecmp(lhs, rhs, lhs_length < rhs_length ? lhs_length : rhs_length);
 }
 
 bool

@@ -608,6 +608,35 @@ thread local storage to ensure maximum portability across supported platforms */
                                         ...)                                                                       \
 	_16
 
+/* \def FOUNDATION_LINKER_INCLUDE
+ *  
+ *  Include a function in the linker output. This is useful for forcing the linker to include a function in the output even
+ *  if it is not used by the application. This is useful for functions that are used by the application but are not called 
+ *  directly, for example, function invoked by static entry functions.
+ * 
+ *  \param func_name Name of the function to include
+ * 
+ *	\example
+ *		// static library header.h
+ *		FOUNDATION_EXTERN void FOUNDATION_LINKER_INCLUDE(module_implicit_initialize)(void);
+ * 
+ *		// static library source.c
+ *		void module_implicit_initialize()
+ *		{
+ *			// Initialize some static library stuff at startup (probably before main is called (i.e. in C++))
+ *		}
+ * 
+ *		// executable client.c
+ *		#include <header.h> // This will force the inclusion of the module implementing the function
+ */
+#if FOUNDATION_PLATFORM_WINDOWS
+#define FOUNDATION_LINKER_INCLUDE(func_name) \
+	__pragma(comment(linker, FOUNDATION_PREPROCESSOR_TOSTRING(FOUNDATION_PREPROCESSOR_JOIN(/include:,func_name)))) \
+	func_name
+#else
+#define FOUNDATION_LINKER_INCLUDE(func_name) func_name	
+#endif
+
 // Architecture details
 #if defined(__SSE2__) || FOUNDATION_ARCH_X86_64
 #undef FOUNDATION_ARCH_SSE2
@@ -853,6 +882,7 @@ thread local storage to ensure maximum portability across supported platforms */
 #pragma warning(disable : 4510)
 #pragma warning(disable : 4512)
 #pragma warning(disable : 4610)
+#pragma warning(disable : 6011)
 #endif
 
 #if FOUNDATION_PLATFORM_WINDOWS
@@ -950,6 +980,11 @@ typedef enum memory_order {
 	memory_order_acq_rel,
 	memory_order_seq_cst
 } memory_order;
+#else
+	#ifdef __cplusplus
+		#include <atomic>
+		#include <memory>
+	#endif
 #endif
 
 #if FOUNDATION_COMPILER_CLANG
@@ -1049,9 +1084,10 @@ typedef volatile _Atomic(void*) atomicptr_t;
 #define STRING_FORMAT(s) (int)(s).length, (s).str
 
 // =======================================
-#define STRING_RANGE(s) (s).str, (s).str + (s).length
-#define STRING_CONST_CAPACITY(s) (s), (sizeof((s)))
 #define WSTRING_CONST(s) (s), (sizeof((s))/sizeof((s[0])) - 1)
+#define STRING_RANGE(s) (s).str, ((s).str + (s).length)
+#define STRING_BUFFER(s) (s), (sizeof((s))/sizeof((s[0])))
+#define STRING_ARGS_BUFFER(s, buf) (s).str, (s).length, (sizeof((buf))/sizeof((buf[0])))
 // =======================================
 // 
 // Misc

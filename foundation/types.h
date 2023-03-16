@@ -127,10 +127,10 @@ typedef enum {
 	WARNING_NETWORK,
     /*! Standard warning */
     WARNING_STANDARD,
-	/*! Used for network and cloud warning */
-	WARNING_CLOUD,
     /*! Used for UI warnings */
     WARNING_UI,
+    /*! Timeout */
+    WARNING_TIMEOUT,
 	/*! Marker, last reserved internal warning identifier */
 	WARNING_LAST_BUILTIN = 0x0fff,
 } warning_t;
@@ -431,6 +431,9 @@ an error occurs during spawning */
 /*! Process exit code, generic success */
 #define PROCESS_EXIT_SUCCESS EXIT_SUCCESS
 
+/*! Invalid object id */
+#define OBJECT_INVALID (0)
+
 /*! Virtual array flag for normal memory allocated storage */
 #define VIRTUALARRAY_MEMORY_ALLOCATED 1
 
@@ -639,7 +642,7 @@ typedef void (*json_handler_fn)(const char* path, size_t path_size, const char* 
 \param trace Stack trace of allocation (if any, otherwise null)
 \param depth Depth of stack trace
 \return 0 to continue dumping allocations, non-zero to stop dump */
-typedef int (*memory_tracker_handler_fn)(const void* addr, size_t size, void* const* trace, size_t depth);
+typedef int (*memory_tracker_handler_fn)(hash_t context, const void* addr, size_t size, void* const* trace, size_t depth);
 
 /*! Subsystem initialization function prototype. Return value should be the success
 state of initialization
@@ -699,7 +702,7 @@ typedef void (*memory_thread_finalize_fn)(void);
 provide an implementation with this prototype for tracking memory allocations
 \param p Pointer to allocated memory block
 \param size Size of memory block */
-typedef void (*memory_track_fn)(void* p, size_t size);
+typedef void (*memory_track_fn)(hash_t context, void* p, size_t size);
 
 /*! Memory tracker untracking function prototype. Implementation of a memory tracker must
 provide an implementation with this prototype for untracking memory allocations
@@ -979,7 +982,7 @@ struct memory_tracker_t {
 struct memory_statistics_t {
 	/*! Number of allocations in total, running counter */
 	uint64_t allocations_total;
-	/*! Number fo allocations, current */
+	/*! Number of allocations, current */
 	uint64_t allocations_current;
 	/*! Number of allocated bytes in total, running counter */
 	uint64_t allocated_total;
@@ -992,7 +995,7 @@ revision, build and control version number components */
 union version_t {
 	/*! Compound version identifier */
 	uint128_t version;
-	/*! Version numbers separated into sections, when serialized into strig form
+	/*! Version numbers separated into sections, when serialized into string form
 	representing "major.minor.revision-revision (control)" */
 	struct {
 		/*! Major version */

@@ -417,6 +417,12 @@ profile_set_output_wait(unsigned int ms) {
 	profile_wait_time = (ms ? ms : 1U);
 }
 
+bool
+profile_is_enable()
+{
+	return profile_initialized && (profile_enabled > 0);
+}
+
 void
 profile_enable(bool enable) {
 	bool was_enabled = (profile_enabled > 0);

@@ -51,6 +51,11 @@ disables all calls.
 FOUNDATION_API void
 profile_enable(bool enable);
 
+/*! Indicates of the profiler is enabled
+\return True if the profiler is enabled */
+FOUNDATION_API bool
+profile_is_enable();
+
 /*! Set output function. The function will be called with blocks of data to write to whatever
 output stream you want.
 \param writer New writer function */
@@ -58,7 +63,7 @@ FOUNDATION_API void
 profile_set_output(profile_write_fn writer);
 
 /*! Control profile output rate by setting time between flushes in milliseconds. Default is
-100ms. Decresee time (increase rate) when passing a smaller buffer to initialization, or
+100ms. Decrease time (increase rate) when passing a smaller buffer to initialization, or
 increase time (decrease rate) if passing a larger buffer.
 \param ms Wait time in milliseconds */
 FOUNDATION_API void
@@ -151,6 +156,9 @@ profile_identifier(void);
 #define profile_enable(...)                     \
 	do {                                        \
 		FOUNDATION_UNUSED_VARARGS(__VA_ARGS__); \
+	} while (0)
+#define profile_is_enabled() \
+	do {                     \
 	} while (0)
 #define profile_set_output(fn)       \
 	do {                             \

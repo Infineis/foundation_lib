@@ -79,7 +79,7 @@ FOUNDATION_API void
 event_post_vlist(event_stream_t* stream, int id, object_t object, tick_t delivery, const void* payload, size_t size,
                  va_list list);
 
-/*! Get next event during procesing
+/*! Get next event during processing
 \param block Event block
 \param event Previous event, pass in 0 for getting first event
 \return      Next event */

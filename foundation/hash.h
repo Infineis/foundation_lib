@@ -42,6 +42,11 @@ enabled, otherwise if will always return an empty string
 FOUNDATION_API string_const_t
 hash_to_string(hash_t value);
 
+/*! Returns the number of hashed context.
+\return      Number of statically hashed context */
+FOUNDATION_API size_t
+hash_context_count();
+
 #if BUILD_ENABLE_STATIC_HASH_DEBUG
 
 static FOUNDATION_FORCEINLINE hash_t
@@ -52,6 +57,8 @@ static_hash(const void* key, size_t len, hash_t value);
 #define static_hash(key, len, value) ((void)sizeof(key), (void)sizeof(len), (hash_t)(value))
 
 #define hash_to_string(value) ((void)sizeof(value), (const char*)0)
+
+#define hash_context_count() ((void)0)
 
 #endif
 
@@ -72,7 +79,7 @@ static_hash_store(const void* key, size_t len, hash_t value);
 static FOUNDATION_FORCEINLINE hash_t
 static_hash(const void* key, size_t len, hash_t value) {
 	hash_t ref = hash(key, len);
-	FOUNDATION_ASSERT_MSGFORMAT(!value || (ref == value), "Static hash fail: %s -> 0x%" PRIx64 ", expected 0x%" PRIx64,
+	FOUNDATION_ASSERT_MSGFORMAT(!value || (ref == value), "Static hash fail: %s -> 0x%" PRIx64 "ULL, expected 0x%" PRIx64 "ULL",
 	                            (const char*)key, ref, value);
 	static_hash_store(key, len, ref);
 	return ref;

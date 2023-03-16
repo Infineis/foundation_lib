@@ -48,7 +48,7 @@ static bool log_auto_newline = true;
 #define LOG_WARNING_NAMES 11+3
 static char* log_warning_name[LOG_WARNING_NAMES] = {"performance", "deprecated", "invalid value",    "memory",
                                                     "unsupported", "suspicious", "system call fail", "deadlock",
-                                                    "script",      "resource", "network", "standard", "cloud", "UI"};
+                                                    "script",      "resource", "network", "standard", "UI", "timeout"};
 
 #define LOG_ERROR_NAMES 18
 static char* log_error_name[LOG_ERROR_NAMES] = {"none",
@@ -463,3 +463,40 @@ internal_log_finalize(void) {
 	log_suppress_table = 0;
 #endif
 }
+
+#if !BUILD_ENABLE_LOG
+
+#undef log_warnf
+#undef log_errorf
+#undef log_infof
+#undef log_set_handler
+
+void
+log_warnf(hash_t context, warning_t warn, const char* format, size_t format_length, ...) {
+    FOUNDATION_UNUSED(context);
+    FOUNDATION_UNUSED(warn);
+    FOUNDATION_UNUSED(format);
+    FOUNDATION_UNUSED(format_length);
+}
+
+void
+log_errorf(hash_t context, error_t err, const char* format, size_t format_length, ...) {
+    FOUNDATION_UNUSED(context);
+    FOUNDATION_UNUSED(err);
+    FOUNDATION_UNUSED(format);
+    FOUNDATION_UNUSED(format_length);
+}
+
+void
+log_infof(hash_t context, const char* format, size_t format_length, ...) {
+    FOUNDATION_UNUSED(context);
+    FOUNDATION_UNUSED(format);
+    FOUNDATION_UNUSED(format_length);
+}
+
+void
+log_set_handler(log_handler_fn handler) {
+    FOUNDATION_UNUSED(handler);
+}
+
+#endif
